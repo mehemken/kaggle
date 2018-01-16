@@ -34,8 +34,8 @@ class Transformer:
         xs = result[self.attribute_names].values
 
         transformer = Pipeline([
-            ('scaler', StandardScaler()),
-            ('imputer', Imputer(strategy='median'))
+            ('imputer', Imputer(strategy='median')),
+            ('scaler', StandardScaler())
         ])
         X = transformer.fit_transform(xs)
 
