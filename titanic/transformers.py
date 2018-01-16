@@ -2,7 +2,7 @@
 
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import Imputer
+from sklearn.preprocessing import Imputer, StandardScaler
 from sklearn.pipeline import Pipeline
 
 
@@ -11,7 +11,7 @@ class Transformer:
         self.columns = 'Sex Ticket Cabin Embarked'.split()
         self.attribute_names = 'Sex Embarked Pclass Fare'.split()
 
-    def get_columns(self, df):
+    def get_categorical(self, df):
         for i in self.columns:
             df[i] = df[i].astype('category').values.codes
         return df
@@ -24,22 +24,23 @@ class Transformer:
                     df1[i] = df[i].copy()
         return df1
 
-    def get_x_y(self, df):
+    def transform(self, df):
         result = (
                 df
-                .pipe(self.get_columns)
+                .pipe(self.get_categorical)
                 .pipe(self.get_numericals)
             )
 
         xs = result[self.attribute_names].values
 
         transformer = Pipeline([
+            ('scaler', StandardScaler()),
             ('imputer', Imputer(strategy='median'))
         ])
         X = transformer.fit_transform(xs)
 
         try:
-            y = result['Survived']
+            y = result['Survived'].values
             return X, y
         except:
             return X, None
