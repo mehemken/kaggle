@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+
+import logging
+logger = logging.getLogger()
+logging.basicConfig(level=logging.DEBUG)
+
+import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
+
+
+class DataFrameSelector(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        pass
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        return X[self.attribute_names].values
+
+
+class toCategories(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        pass
+
+    def fit(self):
+        return self
+
+    def transform(self, df):
+        columns = 'Sex Ticket Cabin Embarked'.split()
+
+        for i in columns:
+            df[i] = df[i].astype('category').values.codes
+
+        return df
+
+
+class getNumericals(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        pass
+
+    def fit(self, df):
+        return df
+
+    def transform(self, df):
+
+        df1 = pd.DataFrame()
+
+        for name, group in df.groupby(df.dtypes, axis=1):
+            if name != 'object':
+                for i in group.columns:
+                    df1[i] = df[i].copy()
+
+        return df1
+
+
+if __name__ == '__main__':
+    pass
