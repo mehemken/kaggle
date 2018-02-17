@@ -74,6 +74,8 @@ class TitanicETL:
         df = df.drop('Cabin', axis=1)
         df = df.drop('Name', axis=1)
         df = df.drop('Ticket', axis=1)
+        df = df.drop('SibSp', axis=1)
+        df = df.drop('Parch', axis=1)
         return df
     
     def get(self):
